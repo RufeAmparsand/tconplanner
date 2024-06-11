@@ -88,6 +88,7 @@ public class Blueprint {
         return Arrays.stream(materials).noneMatch(Objects::isNull);
     }
 
+    // TODO: 警告対応
     public Blueprint clone(){
         return fromNBT(toNBT());
     }
@@ -126,12 +127,14 @@ public class Blueprint {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("tool", Objects.requireNonNull(tool.getItem().getRegistryName()).toString());
         ListTag matList = new ListTag();
+        // TODO: リファクタリング
         for(int i = 0; i < materials.length; i++){
             matList.add(StringTag.valueOf(materials[i] == null ? "" : materials[i].getIdentifier().toString()));
         }
         nbt.put("materials", matList);
         nbt.put("modifiers", modStack.toNBT());
 
+        // TODO: リファクタリング
         if(creativeSlots.size() > 0){
             CompoundTag creativeSlotsNbt = new CompoundTag();
             creativeSlots.forEach((slotType, integer) -> {
@@ -139,6 +142,7 @@ public class Blueprint {
                     creativeSlotsNbt.putInt(slotType.getName(), integer);
                 }
             });
+            // TODO: リファクタリング
             if(creativeSlotsNbt.size() > 0){
                 nbt.put("creativeSlots", creativeSlotsNbt);
             }
@@ -150,12 +154,14 @@ public class Blueprint {
         ResourceLocation toolRL = new ResourceLocation(tag.getString("tool"));
         Optional<TCTool> optional = TCTool.getTools().stream()
                 .filter(tool -> Objects.equals(tool.getItem().getRegistryName(), toolRL)).findFirst();
+        // TODO: 非推奨メソッド対応
         if(!optional.isPresent())return null;
         Blueprint bp = new Blueprint(optional.get());
 
         ListTag materials = tag.getList("materials", 8);
         for(int i = 0; i < materials.size(); i++){
             String id = materials.getString(i);
+            // TODO: 非推奨メソッド対応
             if("".equals(id))continue;
             IMaterial material = MaterialRegistry.getMaterial(new MaterialId(id));
             if(i < bp.materials.length && bp.parts[i].canUseMaterial(material)){
