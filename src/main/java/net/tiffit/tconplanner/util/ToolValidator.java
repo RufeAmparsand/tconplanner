@@ -23,6 +23,7 @@ public final class ToolValidator {
             return ValidatedResult.failure("gui.tconplanner.modifiers.error.minlevel");
         toolClone.removeModifier(modInfo.modifier.getId(), 1);
         IncrementalModifier.setAmount(toolClone.getPersistentData(), modInfo.modifier.getId(), ModifierRecipeLookup.getNeededPerLevel(modInfo.modifier.getId()));
+        //TODO: 非推奨メソッドを代替する toolClone.validate() -> toolClone.tryValidate()
         ValidatedResult validatedResultSubtract = toolClone.validate();
         if(validatedResultSubtract.hasError())return validatedResultSubtract;
         Blueprint bpClone = bp.clone();
